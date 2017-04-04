@@ -3,22 +3,6 @@ import rdp_connect
 import config
 
 
-def cli():
-    cli = argparse.ArgumentParser(prog="Programm summary",
-                                  description="Description")
-
-    cli.add_argument('-n', '--vm-name', type=str, help='vm name', required=True)
-
-    cli.add_argument('-s', '--suffix', type=str,
-                     default=config.DEFAULT_SUFFIX, nargs='?',
-                     help='PC Id. Default: {}'.format(config.DEFAULT_SUFFIX))
-
-    cli.add_argument('-l', '--vm-list', default=False,
-                     dest='vm_list', action='store_true')
-
-    return cli.parse_args()
-
-
 def run_show_list(args):
     rdp_connect.show_vms(name=args.vm_name,
                          verbose=args.verbose)
