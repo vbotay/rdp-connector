@@ -31,16 +31,19 @@ def _get_dc(host=config.VCENTER_IP, user=config.VCENTER_USER,
     return datacenter
 
 
-def get_machine_list(name):
+def get_machine_list(name=None):
     """Get machines matched the name
     :param name: machine name or part of machine name
 
     """
     vms = _get_dc().vmFolder.childEntity
-    print('Getting list of VMs...')
+    print('Getting list of VMs...\n')
+    list_vms = [vm for vm in vms if hasattr(vm, 'summary')]
+    if name is None:
+        return list_vms
+    else:
+        list_vms = [vm for vm in list_vms if name in vm.summary.vm.name]
 
-    list_vms = [vm for vm in vms if hasattr(vm, 'summary') and
-                name in vm.summary.vm.name]
     if not list_vms:
         raise NoVMsError('No machines matched {} were found'.format(name))
 
@@ -49,11 +52,26 @@ def get_machine_list(name):
 
 def get_machine_ips(vms, suffix=None):
     # TODO implement getting machine ips, not ips of few vms
+    suffix = '' if suffix is None else suffix
     machine_ips = [pc.summary.guest.ipAddress for pc in vms if suffix in
                   pc.summary.vm.name]
     if not machine_ips:
         raise NoIPsError('No machine ips')
     return machine_ips
+
+
+def show_vms(name=None, verbose=False):
+    vms = get_machine_list(name=name)
+
+    for vm in vms:
+        summary = vm.summary
+        print("Name         : ", summary.config.name)
+        print("IP           : ", summary.guest.ipAddress)
+        if verbose:
+            print("Path         : ", summary.config.vmPathName)
+            print("Guest        : ", summary.config.guestFullName)
+            print("State        : ", summary.runtime.powerState)
+        print("\n", "="*50, '\n')
 
 
 def get_machine_ip(vms, suffix=None, net=config.DEFAULT_NET):
