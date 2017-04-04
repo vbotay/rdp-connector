@@ -1,6 +1,8 @@
-# rdp-connector
+# vm-manager
 
-rdp-connector is a tool to get rdp connection to VM managed by vCenter.
+## Features
+* rdp -  to get rdp connection to Windows VM managed by vCenter
+* list - to get list of VMs with some with some info about them 
 
-It works under OSX and Windows.
-Support RDP to Windows VMs, other platforms support has not been tested.
+## Notes
+RDP works only under OSX and Windows.
